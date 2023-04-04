@@ -1,1 +1,2 @@
-Thank you for recognizing me as a chapter lead. I appreciate the opportunity to contribute to our team's success and look forward to working with everyone.
+// Add leading zeroes
+transactionId = String.format("%0" + (15 - transactionId.length()) + "d%s", 0, transactionId);
