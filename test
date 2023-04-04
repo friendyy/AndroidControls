@@ -1,2 +1,40 @@
 // Add leading zeroes
 transactionId = String.format("%0" + (15 - transactionId.length()) + "d%s", 0, transactionId);
+
+function exportToCSV() {
+    var caseList = ecm.model.desktop.currentObjectStore.fetchTasks({
+        criteria: ecm.model.SearchQueryBuilder.createPropertyCondition("FolderName", null, ecm.model.SearchQueryBuilder.OPERATOR_IS_NULL),
+        callback: function(caseList) {
+            var csvContent = "data:text/csv;charset=utf-8,";
+            
+            // Get column definitions from the in-basket
+            var inbasket = ecm.model.desktop.currentInbasket;
+            var columns = inbasket.getColumnDefinitions();
+            var headers = columns.map(function(col) { return col.displayName; });
+            
+            // Write headers to CSV
+            csvContent += headers.join(",") + "\r\n";
+            
+            // Write data rows to CSV
+            for (var i = 0; i < caseList.length; i++) {
+                var caseObj = caseList[i];
+                var row = columns.map(function(col) {
+                    return caseObj[col.fieldName] || "";
+                });
+                csvContent += row.join(",") + "\r\n";
+            }
+            
+            // Create download link and trigger click event
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "inbasket.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    });
+}
+
+exportToCSV();
+
