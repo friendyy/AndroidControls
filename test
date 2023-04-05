@@ -1,16 +1,31 @@
 function exportToCSV(items) {
-  // Create CSV header row
-  var header = "Attribute Name,Value\r\n";
-
-  // Create CSV data rows
-  var rows = "";
+  // Extract unique attribute names from all items
+  var attributeNames = {};
   for (var i = 0; i < items.length; i++) {
     var attributes = items[i].attributes;
     for (var attributeName in attributes) {
       if (attributes.hasOwnProperty(attributeName)) {
-        rows += attributeName + "," + attributes[attributeName] + "\r\n";
+        attributeNames[attributeName] = true;
       }
     }
+  }
+
+  // Create CSV header row
+  var header = Object.keys(attributeNames).join(",") + "\r\n";
+
+  // Create CSV data rows
+  var rows = "";
+  for (var i = 0; i < items.length; i++) {
+    var rowData = [];
+    var attributes = items[i].attributes;
+    for (var attributeName in attributeNames) {
+      if (attributes.hasOwnProperty(attributeName)) {
+        rowData.push(attributes[attributeName]);
+      } else {
+        rowData.push("");
+      }
+    }
+    rows += rowData.join(",") + "\r\n";
   }
 
   // Combine header and data rows
@@ -38,14 +53,12 @@ var items = [
   {
     attributes: {
       key1: "value4",
-      key2: "value5",
-      key3: "value6"
+      key2: "value5"
     }
   },
   {
     attributes: {
       key1: "value7",
-      key2: "value8",
       key3: "value9"
     }
   }
