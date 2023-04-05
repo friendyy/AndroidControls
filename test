@@ -1,40 +1,54 @@
-// Add leading zeroes
-transactionId = String.format("%0" + (15 - transactionId.length()) + "d%s", 0, transactionId);
+function exportToCSV(items) {
+  // Create CSV header row
+  var header = "Attribute Name,Value\r\n";
 
-function exportToCSV() {
-    var caseList = ecm.model.desktop.currentObjectStore.fetchTasks({
-        criteria: ecm.model.SearchQueryBuilder.createPropertyCondition("FolderName", null, ecm.model.SearchQueryBuilder.OPERATOR_IS_NULL),
-        callback: function(caseList) {
-            var csvContent = "data:text/csv;charset=utf-8,";
-            
-            // Get column definitions from the in-basket
-            var inbasket = ecm.model.desktop.currentInbasket;
-            var columns = inbasket.getColumnDefinitions();
-            var headers = columns.map(function(col) { return col.displayName; });
-            
-            // Write headers to CSV
-            csvContent += headers.join(",") + "\r\n";
-            
-            // Write data rows to CSV
-            for (var i = 0; i < caseList.length; i++) {
-                var caseObj = caseList[i];
-                var row = columns.map(function(col) {
-                    return caseObj[col.fieldName] || "";
-                });
-                csvContent += row.join(",") + "\r\n";
-            }
-            
-            // Create download link and trigger click event
-            var encodedUri = encodeURI(csvContent);
-            var link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "inbasket.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    });
+  // Create CSV data rows
+  var rows = "";
+  for (var i = 0; i < items.length; i++) {
+    var attributes = items[i].attributes;
+    for (var attributeName in attributes) {
+      if (attributes.hasOwnProperty(attributeName)) {
+        rows += attributeName + "," + attributes[attributeName] + "\r\n";
+      }
+    }
+  }
+
+  // Combine header and data rows
+  var csv = header + rows;
+
+  // Create download link and trigger click event
+  var encodedUri = encodeURI(csv);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "items.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
-exportToCSV();
+// Example usage
+var items = [
+  {
+    attributes: {
+      key1: "value1",
+      key2: "value2",
+      key3: "value3"
+    }
+  },
+  {
+    attributes: {
+      key1: "value4",
+      key2: "value5",
+      key3: "value6"
+    }
+  },
+  {
+    attributes: {
+      key1: "value7",
+      key2: "value8",
+      key3: "value9"
+    }
+  }
+];
 
+exportToCSV(items);
