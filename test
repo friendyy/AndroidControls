@@ -1,67 +1,21 @@
-function exportToCSV(items) {
-  // Extract unique attribute names from all items
-  var attributeNames = {};
-  for (var i = 0; i < items.length; i++) {
-    var attributes = items[i].attributes;
-    for (var attributeName in attributes) {
-      if (attributes.hasOwnProperty(attributeName)) {
-        attributeNames[attributeName] = true;
-      }
-    }
-  }
+Activity 1: Update the workflow for new transaction type
 
-  // Create CSV header row
-  var header = Object.keys(attributeNames).join(",") + "\r\n";
+    Analyze the workflow requirements and document changes: 2 hours
+    Develop and test the new workflow: 8 hours
+    Document the new workflow and obtain approval: 2 hours
 
-  // Create CSV data rows
-  var rows = "";
-  for (var i = 0; i < items.length; i++) {
-    var rowData = [];
-    var attributes = items[i].attributes;
-    for (var attributeName in attributeNames) {
-      if (attributes.hasOwnProperty(attributeName)) {
-        rowData.push(attributes[attributeName]);
-      } else {
-        rowData.push("");
-      }
-    }
-    rows += rowData.join(",") + "\r\n";
-  }
+Total effort: 12 hours
 
-  // Combine header and data rows
-  var csv = header + rows;
+Activity 2: Update the UI and views to show new fields
 
-  // Create download link and trigger click event
-  var encodedUri = encodeURI(csv);
-  var link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "items.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
+    Analyze the UI and view requirements and document changes: 3 hours
+    Develop and test the new UI and views: 10 hours
+    Document the changes and obtain approval: 2 hours
 
-// Example usage
-var items = [
-  {
-    attributes: {
-      key1: "value1",
-      key2: "value2",
-      key3: "value3"
-    }
-  },
-  {
-    attributes: {
-      key1: "value4",
-      key2: "value5"
-    }
-  },
-  {
-    attributes: {
-      key1: "value7",
-      key3: "value9"
-    }
-  }
-];
+Total effort: 15 hours
 
-exportToCSV(items);
+Activity 3: Update Scripts to handle new fields logic
+
+    Analyze the script requirements and document changes: 2 hours
+    Develop and test the new scripts: 8 hours
+    Document the changes and obtain approval: 2 hours
